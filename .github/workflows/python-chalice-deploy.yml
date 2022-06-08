@@ -21,11 +21,6 @@ on:
 jobs:
   chalice-deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [ '3.9', '3.10' ]
-
-    name: Python ${{ matrix.python-version }} sample
     steps:
 
     - uses: actions/checkout@v3
@@ -42,8 +37,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install chalice==1.27.1
         pip install -r requirements.txt
+        pip install -r requirements-extra.txt
 
     - name: Deploy Chalice application
       run: |
