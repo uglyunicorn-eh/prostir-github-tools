@@ -2,10 +2,10 @@ name: Prepare Python (Dev)
 
 on:
   workflow_call:
-    secrets:
-      GH_ACTIONS_SSH_PRIVATE_KEY:
-        required: true
     inputs:
+      gh-actions-ssh-private-key:
+        type: string
+        required: true
       python-version:
         type: string
         required: false
@@ -16,6 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: ./.github/workflows/python-prepare.yml@main
+      with:
+        gh-actions-ssh-private-key: ${{ inputs.gh-actions-ssh-private-key }}
+        python-version: ${{ inputs.python-version }}
+
     - name: Install dependencies (dev)
       run: |
         pip install -e ".[develop]"
