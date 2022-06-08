@@ -12,7 +12,7 @@ on:
         default: "3.9"
 
 jobs:
-  build:
+  pylint:
     runs-on: ubuntu-latest
     steps:
 
