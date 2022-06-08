@@ -3,10 +3,37 @@
 Set of GitHub tools, workflows, etc:
 
 * Workflows:
+    * [python-chalice-deploy](#python-chalice-deploy)
     * [python-pylint](#python-pylint)
     * [python-pytest](#python-pytest)
 
 ## Workflows
+
+### python-chalice-deploy
+
+Deploys Chalice application to AWS
+
+**Inputs:**
+
+* `stage` — Stage to deploy (Required)
+* `python-version` — Python version (Default: `"3.9"`)
+
+**Secrets:**
+
+* `GH_ACTIONS_SSH_PRIVATE_KEY` — Private SSH key to be able to clone the repos using SSH (Required)
+* `AWS_ACCESS_KEY_ID` — AWS Access Key ID (Required)
+* `AWS_SECRET_ACCESS_KEY` — AWS Secret Access Key (Required)
+
+Example:
+
+```yaml
+jobs:
+  analize:
+    uses: uglyunicorn-eh/prostir-github-tools/.github/workflows/python-chalice-deploy.yml@main
+    secrets: inherit
+    with:
+      stage: prod
+```
 
 ### python-pylint
 
