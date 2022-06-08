@@ -1,0 +1,21 @@
+name: Prepare Python (Dev)
+
+on:
+  workflow_call:
+    secrets:
+      GH_ACTIONS_SSH_PRIVATE_KEY:
+        required: true
+    inputs:
+      python-version:
+        type: string
+        required: false
+        default: "3.9"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: ./.github/workflows/python-prepare.yml@main
+    - name: Install dependencies (dev)
+      run: |
+        pip install -e ".[develop]"
