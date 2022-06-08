@@ -34,16 +34,20 @@ jobs:
         python-version: ${{ inputs.python-version }}
         cache: 'pip'
 
-    - name: Install dependencies
+    - name: Install dependencies (requirements.txt)
+      continue-on-error: true
       run: |
         pip install -r requirements.txt
 
-    - name: Install dependencies (dev)
+    - name: Install dependencies (requirements-dev.txt)
+      continue-on-error: true
       run: |
-        pip install coverage==6.4.1
-        pip install pylint==2.14.0
-        pip install pytest-cov==3.0.0
-        pip install pytest==7.1.2
+        pip install -r requirements-dev.txt
+
+    - name: Install dependencies (requirements-extra.txt)
+      continue-on-error: true
+      run: |
+        pip install -r requirements-extra.txt
 
     - name: Run Tests and Generate Report
       run: |
