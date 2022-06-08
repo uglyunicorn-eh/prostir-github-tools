@@ -16,6 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - uses: actions/checkout@v3
+
+    # - uses: webfactory/ssh-agent@v0.5.4
+    #   with:
+    #       ssh-private-key: ${{ secrets.GH_ACTIONS_SSH_PRIVATE_KEY }}
+
     - name: Install dependencies (dev)
       run: |
         pip install pylint
