@@ -12,7 +12,7 @@ on:
         default: "3.9"
 
 jobs:
-  pylint:
+  bootstrap:
     runs-on: ubuntu-latest
     steps:
 
