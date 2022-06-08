@@ -1,4 +1,4 @@
-name: Prepare Python (Dev)
+name: pylint
 
 on:
   workflow_call:
@@ -6,6 +6,9 @@ on:
       gh-actions-ssh-private-key:
         type: string
         required: true
+      codecov-token:
+        type: string
+        required: false
       python-version:
         type: string
         required: false
@@ -35,3 +38,7 @@ jobs:
     - name: Install dependencies (dev)
       run: |
         pip install -e ".[develop]"
+
+    - name: Analysing the code with pylint
+      run: |
+        pylint $(git ls-files '*.py')
