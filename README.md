@@ -16,6 +16,7 @@ Deploys Chalice application to AWS
 **Inputs:**
 
 * `stage` — Stage to deploy (Required)
+* `aws-region` — AWS region (Default: `"us-west-2"`)
 * `python-version` — Python version (Default: `"3.9"`)
 
 **Secrets:**
