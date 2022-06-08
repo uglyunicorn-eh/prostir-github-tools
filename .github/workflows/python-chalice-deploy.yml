@@ -24,6 +24,7 @@ on:
 
 jobs:
   chalice-deploy:
+    name: Deploy on AWS Lambda Python-${{ inputs.python-verion }}
     runs-on: ubuntu-latest
     steps:
 
