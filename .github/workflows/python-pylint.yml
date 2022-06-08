@@ -2,13 +2,10 @@ name: pylint
 
 on:
   workflow_call:
-    inputs:
-      gh-actions-ssh-private-key:
-        type: string
+    secrets:
+      GH_ACTIONS_SSH_PRIVATE_KEY:
         required: true
-      codecov-token:
-        type: string
-        required: false
+    inputs:
       python-version:
         type: string
         required: false
@@ -23,7 +20,7 @@ jobs:
 
     - uses: webfactory/ssh-agent@v0.5.4
       with:
-          ssh-private-key: ${{ inputs.gh-actions-ssh-private-key }}
+          ssh-private-key: ${{ secrets.GH_ACTIONS_SSH_PRIVATE_KEY }}
 
     - name: Set up Python
       uses: actions/setup-python@v3
