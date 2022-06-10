@@ -7,6 +7,7 @@ Set of GitHub tools, workflows, etc:
     * [python-pylint](#python-pylint)
     * [python-pylint-pkg](#python-pylint-pkg)
     * [python-pytest](#python-pytest)
+    * [python-pytest-pkg](#python-pytest-pkg)
 
 ## Workflows
 
@@ -100,6 +101,31 @@ Example:
 jobs:
   test:
     uses: uglyunicorn-eh/prostir-github-tools/.github/workflows/python-pytest.yml@main
+    secrets: inherit
+    with:
+      upload-codecov: true
+```
+
+### python-pytest-pkg
+
+Runs unit tests for package with pytest. If specified, uploads code coverage to https://codecove.io/
+
+**Inputs:**
+
+* `python-version` — Python version (Default: `"3.9"`)
+* `upload-codecov` — Whenever it should upload coverage to Codecov. If `true` requires a secret `CODECOV_TOKEN` (Default: `false`)
+
+**Secrets:**
+
+* `GH_ACTIONS_SSH_PRIVATE_KEY` — Private SSH key to be able to clone the repos using SSH (Required)
+* `CODECOV_TOKEN` — Codecov token. Required if `upload-codecov` is `true`
+
+Example:
+
+```yaml
+jobs:
+  test:
+    uses: uglyunicorn-eh/prostir-github-tools/.github/workflows/python-pytest-pkg.yml@main
     secrets: inherit
     with:
       upload-codecov: true
