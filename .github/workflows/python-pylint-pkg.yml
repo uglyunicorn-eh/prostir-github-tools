@@ -29,7 +29,7 @@ jobs:
         python-version: ${{ inputs.python-version }}
         cache: 'pip'
 
-    - name: Install dependencies (requirements.txt)
+    - name: Install dev dependencies (.[develop])
       continue-on-error: true
       run: |
         pip install -e ".[develop]"
