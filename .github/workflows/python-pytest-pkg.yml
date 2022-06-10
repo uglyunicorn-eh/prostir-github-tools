@@ -46,7 +46,7 @@ jobs:
 
     - name: Run Tests and Generate Report
       run: |
-        coverage run -m pytest --cov=chalicelib --cov-report xml
+        coverage run -m pytest --cov=prostir --cov-report xml
 
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v2
