@@ -5,6 +5,7 @@ Set of GitHub tools, workflows, etc:
 * Workflows:
     * [python-chalice-deploy](#python-chalice-deploy)
     * [python-pylint](#python-pylint)
+    * [python-pylint-pkg](#python-pylint-pkg)
     * [python-pytest](#python-pytest)
 
 ## Workflows
@@ -54,6 +55,28 @@ Example:
 jobs:
   analize:
     uses: uglyunicorn-eh/prostir-github-tools/.github/workflows/python-pylint.yml@main
+    secrets: inherit
+```
+
+
+### python-pylint-pkg
+
+Analizes packages code with pylint.
+
+**Inputs:**
+
+* `python-version` — Python version (Default: `"3.9"`)
+
+**Secrets:**
+
+* `GH_ACTIONS_SSH_PRIVATE_KEY` — Private SSH key to be able to clone the repos using SSH (Required)
+
+Example:
+
+```yaml
+jobs:
+  analize:
+    uses: uglyunicorn-eh/prostir-github-tools/.github/workflows/python-pylint-pkg.yml@main
     secrets: inherit
 ```
 
