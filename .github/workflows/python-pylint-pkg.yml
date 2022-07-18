@@ -59,7 +59,8 @@ jobs:
     - name: Install dev dependencies (.[develop])
       continue-on-error: true
       run: |
-        aws codeartifact login --tool pip --repository ${{ inputs.aws-repository }} --domain ${{ inputs.aws-domain }} --domain-owner ${{ inputs.aws-domain-owner }}
+        export AWS_CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ${{ inputs.aws-domain }} --domain-owner ${{ inputs.aws-domain-owner }} --query authorizationToken --output text`
+        pip config set global.extra-index-url https://aws:$AWS_CODEARTIFACT_AUTH_TOKEN@${{ inputs.aws-domain }}-${{ inputs.aws-domain-owner }}.d.codeartifact.us-west-2.amazonaws.com/pypi/${{ inputs.aws-repository }}/simple/
         pip install -e ".[develop]"
 
     - name: Analysing the code with pylint
