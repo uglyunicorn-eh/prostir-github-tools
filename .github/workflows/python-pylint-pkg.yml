@@ -59,6 +59,7 @@ jobs:
     - name: Install dev dependencies (.[develop])
       continue-on-error: true
       run: |
+        aws codeartifact login --tool pip --repository ${{ inputs.aws-repository }} --domain ${{ inputs.aws-domain }} --domain-owner ${{ inputs.aws-domain-owner }}
         pip install -e ".[develop]"
 
     - name: Analysing the code with pylint
