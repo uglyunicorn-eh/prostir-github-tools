@@ -57,7 +57,6 @@ jobs:
 
     - name: Setup pip with AWS CodeArtifacts
       run: |
-        echo ${{ env.AWS_CODEARTIFACTS_AUTH_TOKEN }}
         pip config set global.extra-index-url https://aws:${{ env.AWS_CODEARTIFACTS_AUTH_TOKEN }}@${{ secrets.AWS_CODEARTIFACTS_DOMAIN }}-${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }}.d.codeartifact.us-west-2.amazonaws.com/pypi/${{ secrets.AWS_CODEARTIFACTS_REPOSITORY }}/simple/
       if: ${{ inputs.aws-codeartifacts }}
 
