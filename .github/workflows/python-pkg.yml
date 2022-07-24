@@ -1,0 +1,67 @@
+name: Publish to AWS CodeArtifact
+
+on:
+  workflow_call:
+    secrets:
+      GH_ACTIONS_SSH_PRIVATE_KEY:
+        required: false
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+
+    inputs:
+      python-version:
+        type: string
+        required: false
+        default: "3.9"
+      private-repo:
+        type: boolean
+        required: false
+        default: true
+      aws-domain-owner:
+        type: string
+        required: false
+        default: "891906561120"
+      aws-domain:
+        type: string
+        required: false
+        default: "prostir"
+      aws-repository:
+        type: string
+        required: false
+        default: "prostir.io"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: webfactory/ssh-agent@v0.5.4
+        if: ${{ inputs.private-repo }}
+        with:
+            ssh-private-key: ${{ secrets.GH_ACTIONS_SSH_PRIVATE_KEY }}
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine
+
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Build and publish
+        run: |
+          export TWINE_USERNAME=aws
+          export TWINE_PASSWORD=`aws codeartifact get-authorization-token --domain ${{ inputs.aws-domain }} --domain-owner ${{ inputs.aws-domain-owner }} --query authorizationToken --output text`
+          export TWINE_REPOSITORY_URL=`aws codeartifact get-repository-endpoint --domain ${{ inputs.aws-domain }} --domain-owner ${{ inputs.aws-domain-owner }} --repository ${{ inputs.aws-repository }} --format pypi --query repositoryEndpoint --output text`
+          python setup.py sdist bdist_wheel
+          twine upload dist/*

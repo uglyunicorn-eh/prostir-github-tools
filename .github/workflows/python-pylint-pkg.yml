@@ -5,6 +5,10 @@ on:
     secrets:
       GH_ACTIONS_SSH_PRIVATE_KEY:
         required: false
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
     inputs:
       python-version:
         type: string
@@ -14,6 +18,18 @@ on:
         type: boolean
         required: false
         default: true
+      aws-domain-owner:
+        type: string
+        required: false
+        default: "891906561120"
+      aws-domain:
+        type: string
+        required: false
+        default: "prostir"
+      aws-repository:
+        type: string
+        required: false
+        default: "prostir.io"
 
 jobs:
   pylint:
@@ -34,9 +50,17 @@ jobs:
         python-version: ${{ inputs.python-version }}
         cache: 'pip'
 
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
+
     - name: Install dev dependencies (.[develop])
       continue-on-error: true
       run: |
+        export AWS_CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ${{ inputs.aws-domain }} --domain-owner ${{ inputs.aws-domain-owner }} --query authorizationToken --output text`
+        pip config set global.extra-index-url https://aws:$AWS_CODEARTIFACT_AUTH_TOKEN@${{ inputs.aws-domain }}-${{ inputs.aws-domain-owner }}.d.codeartifact.us-west-2.amazonaws.com/pypi/${{ inputs.aws-repository }}/simple/
         pip install -e ".[develop]"
 
     - name: Analysing the code with pylint
