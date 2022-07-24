@@ -41,7 +41,7 @@ jobs:
 
     - name: AWS CodeArtifacts Login
       run: |
-        export AWS_CODEARTIFACTS_AUTH_TOKEN=aws codeartifact get-authorization-token --domain ${{ secrets.AWS_CODEARTIFACTS_DOMAIN }} --domain-owner ${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }} --query authorizationToken --output text
+        export AWS_CODEARTIFACTS_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain ${{ secrets.AWS_CODEARTIFACTS_DOMAIN }} --domain-owner ${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }} --query authorizationToken --output text)
         pip config set global.extra-index-url https://aws:$AWS_CODEARTIFACTS_AUTH_TOKEN@${{ secrets.AWS_CODEARTIFACTS_DOMAIN }}-${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }}.d.codeartifact.us-west-2.amazonaws.com/pypi/${{ secrets.AWS_CODEARTIFACTS_REPOSITORY }}/simple/
       if: ${{ inputs.aws-codeartifacts }}
 
