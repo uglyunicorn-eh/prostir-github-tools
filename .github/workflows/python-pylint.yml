@@ -41,7 +41,7 @@ jobs:
 
     - name: AWS CodeArtifacts Login
       run: |
-        echo "AWS_CODEARTIFACTS_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain ${{ secrets.AWS_CODEARTIFACTS_DOMAIN }} --domain-owner ${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }} --query authorizationToken --output text)" >> GITHUB_ENV
+        echo "AWS_CODEARTIFACTS_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain ${{ secrets.AWS_CODEARTIFACTS_DOMAIN }} --domain-owner ${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }} --query authorizationToken --output text)" >> $GITHUB_ENV
       if: ${{ inputs.aws-codeartifacts }}
 
     - name: Setup pip with AWS CodeArtifacts
