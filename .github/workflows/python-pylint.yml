@@ -5,11 +5,21 @@ on:
     secrets:
       GH_ACTIONS_SSH_PRIVATE_KEY:
         required: true
+      AWS_CODEARTIFACTS_DOMAIN_OWNER:
+        required: false
+      AWS_CODEARTIFACTS_DOMAIN:
+        required: false
+      AWS_CODEARTIFACTS_REPOSITORY:
+        required: false
     inputs:
       python-version:
         type: string
         required: false
         default: "3.9"
+      aws-codeartifacts:
+        type: boolean
+        required: false
+        default: true
 
 jobs:
   pylint:
@@ -28,6 +38,12 @@ jobs:
       with:
         python-version: ${{ inputs.python-version }}
         cache: 'pip'
+
+    - name: AWS CodeArtifacts Login
+      run: |
+        export AWS_CODEARTIFACTS_AUTH_TOKEN=aws codeartifact get-authorization-token --domain ${{ secrets.AWS_CODEARTIFACTS_DOMAIN }} --domain-owner ${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }} --query authorizationToken --output text
+        pip config set global.extra-index-url https://aws:$AWS_CODEARTIFACTS_AUTH_TOKEN@${{ secrets.AWS_CODEARTIFACTS_DOMAIN }}-${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }}.d.codeartifact.us-west-2.amazonaws.com/pypi/${{ secrets.AWS_CODEARTIFACTS_REPOSITORY }}/simple/
+      if: ${{ inputs.aws-codeartifacts }}
 
     - name: Install dependencies (requirements.txt)
       continue-on-error: true
