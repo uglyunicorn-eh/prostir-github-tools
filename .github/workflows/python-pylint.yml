@@ -5,6 +5,10 @@ on:
     secrets:
       GH_ACTIONS_SSH_PRIVATE_KEY:
         required: true
+      AWS_ACCESS_KEY_ID:
+        required: false
+      AWS_SECRET_ACCESS_KEY:
+        required: false
       AWS_CODEARTIFACTS_DOMAIN_OWNER:
         required: false
       AWS_CODEARTIFACTS_DOMAIN:
@@ -38,6 +42,13 @@ jobs:
       with:
         python-version: ${{ inputs.python-version }}
         cache: 'pip'
+
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
+      if: ${{ inputs.aws-codeartifacts }}
 
     - name: AWS CodeArtifacts Login
       run: |
