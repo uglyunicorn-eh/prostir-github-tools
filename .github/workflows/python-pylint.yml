@@ -46,24 +46,26 @@ jobs:
 
     - name: Setup pip with AWS CodeArtifacts
       run: |
+        echo ${{ env.AWS_CODEARTIFACTS_AUTH_TOKEN }}
         pip config set global.extra-index-url https://aws:${{ env.AWS_CODEARTIFACTS_AUTH_TOKEN }}@${{ secrets.AWS_CODEARTIFACTS_DOMAIN }}-${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }}.d.codeartifact.us-west-2.amazonaws.com/pypi/${{ secrets.AWS_CODEARTIFACTS_REPOSITORY }}/simple/
       if: ${{ inputs.aws-codeartifacts }}
 
     - name: Install dependencies (requirements.txt)
-      continue-on-error: true
+      continue-on-error: false
       run: |
         pip install -r requirements.txt
 
     - name: Install dependencies (requirements-dev.txt)
-      continue-on-error: true
+      continue-on-error: false
       run: |
         pip install -r requirements-dev.txt
 
     - name: Install dependencies (requirements-extra.txt)
-      continue-on-error: true
+      continue-on-error: false
       run: |
         pip install -r requirements-extra.txt
 
     - name: Analysing the code with pylint
+      continue-on-error: false
       run: |
         pylint $(git ls-files '*.py')
