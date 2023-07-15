@@ -70,9 +70,9 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    - name: Install dependencies (requirements-extra.txt)
-      run: |
-        pip install -r requirements-extra.txt
+    # - name: Install dependencies (requirements-extra.txt)
+    #   run: |
+    #     pip install -r requirements-extra.txt
 
     - name: Deploy Chalice application
       run: |
