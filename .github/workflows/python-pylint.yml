@@ -43,6 +43,10 @@ jobs:
         python-version: ${{ inputs.python-version }}
         cache: 'pip'
 
+    - name: Update PIP
+      run: |
+        pip install -U pip
+
     - uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -60,20 +64,15 @@ jobs:
         pip config set global.extra-index-url https://aws:${{ env.AWS_CODEARTIFACTS_AUTH_TOKEN }}@${{ secrets.AWS_CODEARTIFACTS_DOMAIN }}-${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }}.d.codeartifact.us-west-2.amazonaws.com/pypi/${{ secrets.AWS_CODEARTIFACTS_REPOSITORY }}/simple/
       if: ${{ inputs.aws-codeartifacts }}
 
-    - name: Install dependencies (requirements.txt)
+    - name: Install dependencies
       continue-on-error: false
       run: |
-        pip install -r requirements.txt
+        pip install -r requirements-lock.txt
 
     - name: Install dependencies (requirements-dev.txt)
       continue-on-error: false
       run: |
         pip install -r requirements-dev.txt
-
-    - name: Install dependencies (requirements-extra.txt)
-      continue-on-error: false
-      run: |
-        pip install -r requirements-extra.txt
 
     - name: Analysing the code with pylint
       continue-on-error: false
