@@ -37,54 +37,53 @@ jobs:
     name: AWS Lambda Python ${{ inputs.python-version }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
 
-    - uses: actions/checkout@v3
-
-    - uses: webfactory/ssh-agent@v0.5.4
-      with:
+      - uses: webfactory/ssh-agent
+        with:
           ssh-private-key: ${{ secrets.GH_ACTIONS_SSH_PRIVATE_KEY }}
 
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ inputs.python-version }}
-        cache: 'pip'
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ inputs.python-version }}
+          cache: "pip"
 
-    - name: Update PIP
-      run: |
-        pip install -U pip
+      - name: Update PIP
+        run: |
+          pip install -U pip
 
-    - uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-west-2
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
 
-    - name: AWS CodeArtifacts Login
-      run: |
-        echo AWS_CODEARTIFACTS_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain ${{ secrets.AWS_CODEARTIFACTS_DOMAIN }} --domain-owner ${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }} --query authorizationToken --output text) >> $GITHUB_ENV
-      if: ${{ inputs.aws-codeartifacts }}
+      - name: AWS CodeArtifacts Login
+        run: |
+          echo AWS_CODEARTIFACTS_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain ${{ secrets.AWS_CODEARTIFACTS_DOMAIN }} --domain-owner ${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }} --query authorizationToken --output text) >> $GITHUB_ENV
+        if: ${{ inputs.aws-codeartifacts }}
 
-    - name: Setup pip with AWS CodeArtifacts
-      run: |
-        pip config set global.extra-index-url https://aws:${{ env.AWS_CODEARTIFACTS_AUTH_TOKEN }}@${{ secrets.AWS_CODEARTIFACTS_DOMAIN }}-${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }}.d.codeartifact.us-west-2.amazonaws.com/pypi/${{ secrets.AWS_CODEARTIFACTS_REPOSITORY }}/simple/
-      if: ${{ inputs.aws-codeartifacts }}
+      - name: Setup pip with AWS CodeArtifacts
+        run: |
+          pip config set global.extra-index-url https://aws:${{ env.AWS_CODEARTIFACTS_AUTH_TOKEN }}@${{ secrets.AWS_CODEARTIFACTS_DOMAIN }}-${{ secrets.AWS_CODEARTIFACTS_DOMAIN_OWNER }}.d.codeartifact.us-west-2.amazonaws.com/pypi/${{ secrets.AWS_CODEARTIFACTS_REPOSITORY }}/simple/
+        if: ${{ inputs.aws-codeartifacts }}
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements-lock.txt
+      - name: Install dependencies
+        run: |
+          pip install -r requirements-lock.txt
 
-    - name: Deploy Chalice application
-      run: |
-        chalice deploy --stage ${{ inputs.stage }}
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ${{ inputs.aws-region }}
+      - name: Deploy Chalice application
+        run: |
+          chalice deploy --stage ${{ inputs.stage }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ inputs.aws-region }}
 
-    - name: Archive deployment artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: chalice
-        path: |
-          .chalice
+      - name: Archive deployment artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: chalice
+          path: |
+            .chalice

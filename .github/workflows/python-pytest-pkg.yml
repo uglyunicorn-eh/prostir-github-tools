@@ -43,44 +43,43 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ '3.9', '3.10' ]
+        python-version: ["3.9", "3.10"]
 
     name: Pytest on Python ${{ matrix.python-version }}
     steps:
+      - uses: actions/checkout@v3
 
-    - uses: actions/checkout@v3
-
-    - uses: webfactory/ssh-agent@v0.5.4
-      if: ${{ inputs.private-repo }}
-      with:
+      - uses: webfactory/ssh-agent
+        if: ${{ inputs.private-repo }}
+        with:
           ssh-private-key: ${{ secrets.GH_ACTIONS_SSH_PRIVATE_KEY }}
 
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-        cache: 'pip'
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
 
-    - uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-west-2
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
 
-    - name: Install dev dependencies (.[develop])
-      continue-on-error: true
-      run: |
-        export AWS_CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ${{ inputs.aws-domain }} --domain-owner ${{ inputs.aws-domain-owner }} --query authorizationToken --output text`
-        pip config set global.extra-index-url https://aws:$AWS_CODEARTIFACT_AUTH_TOKEN@${{ inputs.aws-domain }}-${{ inputs.aws-domain-owner }}.d.codeartifact.us-west-2.amazonaws.com/pypi/${{ inputs.aws-repository }}/simple/
-        pip install -e ".[develop]"
+      - name: Install dev dependencies (.[develop])
+        continue-on-error: true
+        run: |
+          export AWS_CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ${{ inputs.aws-domain }} --domain-owner ${{ inputs.aws-domain-owner }} --query authorizationToken --output text`
+          pip config set global.extra-index-url https://aws:$AWS_CODEARTIFACT_AUTH_TOKEN@${{ inputs.aws-domain }}-${{ inputs.aws-domain-owner }}.d.codeartifact.us-west-2.amazonaws.com/pypi/${{ inputs.aws-repository }}/simple/
+          pip install -e ".[develop]"
 
-    - name: Run Tests and Generate Report
-      run: |
-        coverage run -m pytest --cov=prostir --cov-report xml
+      - name: Run Tests and Generate Report
+        run: |
+          coverage run -m pytest --cov=prostir --cov-report xml
 
-    - name: Upload Coverage to Codecov
-      uses: codecov/codecov-action@v2
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./test-results/coverage.xml
-      if: ${{ inputs.upload-codecov }}
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./test-results/coverage.xml
+        if: ${{ inputs.upload-codecov }}
