@@ -72,6 +72,7 @@ jobs:
         continue-on-error: false
         run: |
           pip install -r requirements-dev.txt
+          pip install -r requirements-extra.txt
 
       - name: Analysing the code with pylint
         continue-on-error: false
