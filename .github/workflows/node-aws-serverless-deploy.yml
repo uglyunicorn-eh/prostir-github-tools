@@ -1,4 +1,4 @@
-name: .github/workflows/python-chalice-deploy.yml
+name: .github/workflows/node-aws-serverless-deploy.yml
 
 on:
   workflow_call:
