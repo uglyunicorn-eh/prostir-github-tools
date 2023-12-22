@@ -1,0 +1,38 @@
+name: .github/workflows/python-chalice-deploy.yml
+
+on:
+  workflow_call:
+    secrets:
+      GH_ACTIONS_SSH_PRIVATE_KEY:
+        required: true
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+    inputs:
+      aws-region:
+        type: string
+        required: false
+        default: "us-west-2"
+
+jobs:
+  build:
+    name: Build AWS Lambda
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "yarn"
+          cache-dependency-path: "yarn.lock"
+
+      - run: yarn build
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: lambda
+          path: dist/main.js
