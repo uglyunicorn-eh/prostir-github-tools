@@ -9,6 +9,11 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
+      SENTRY_DSN:
+        required: false
+      SENTRY_AUTH_TOKEN:
+        required: false
+
     inputs:
       aws-region:
         type: string
@@ -36,6 +41,9 @@ jobs:
           aws-region: us-west-2
 
       - run: yarn && yarn package-deploy
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: Archive artifact
         uses: actions/upload-artifact@v3
