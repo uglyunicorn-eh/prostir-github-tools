@@ -17,7 +17,7 @@ on:
 
 jobs:
   build:
-    name: Build AWS Lambda
+    name: "AWS Lambda: Build, Package, and Deploy"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -29,10 +29,10 @@ jobs:
           cache: "yarn"
           cache-dependency-path: "yarn.lock"
 
-      - run: yarn && yarn build
+      - run: yarn && yarn package-deploy
 
       - name: Archive code coverage results
         uses: actions/upload-artifact@v3
         with:
           name: lambda
-          path: dist/main.js
+          path: dist
