@@ -13,6 +13,8 @@ on:
         required: false
       SENTRY_AUTH_TOKEN:
         required: false
+      MONGODB_URI:
+        required: false
 
     inputs:
       aws-region:
@@ -44,6 +46,7 @@ jobs:
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
 
       - name: Archive artifact
         uses: actions/upload-artifact@v3
