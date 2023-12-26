@@ -17,6 +17,8 @@ on:
         required: false
       SENDGRID_API_KEY:
         required: false
+      RSA_PRIVATE_KEY:
+        required: false
 
     inputs:
       aws-region:
@@ -50,6 +52,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          RSA_PRIVATE_KEY: ${{ secrets.RSA_PRIVATE_KEY }}
 
       - name: Archive artifact
         uses: actions/upload-artifact@v3
