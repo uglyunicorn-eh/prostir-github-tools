@@ -31,7 +31,7 @@ jobs:
     name: "AWS Lambda: Build, Package, and Deploy"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Node
         uses: actions/setup-node@v4
