@@ -43,7 +43,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.GH_ACTIONS_SSH_PRIVATE_KEY }}
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ inputs.python-version }}
 
