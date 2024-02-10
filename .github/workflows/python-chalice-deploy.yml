@@ -83,7 +83,7 @@ jobs:
           AWS_DEFAULT_REGION: ${{ inputs.aws-region }}
 
       - name: Archive deployment artifacts
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v4
         with:
           name: chalice
           path: |
