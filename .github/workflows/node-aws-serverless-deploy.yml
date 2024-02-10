@@ -55,7 +55,7 @@ jobs:
           RSA_PRIVATE_KEY: ${{ secrets.RSA_PRIVATE_KEY }}
 
       - name: Archive artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.3.1
         with:
           name: lambda
           path: dist
